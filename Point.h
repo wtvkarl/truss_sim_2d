@@ -23,6 +23,10 @@ class Point
 		std::string get_norm_coords();
 };
 
+
+//based off of the length and height of the window (1000, 800, respectively
+//didn't feel like making variables for it just easier to hardcode it, not sure if it's bad practice...
+
 static GLfloat norm_x(GLfloat x)
 {
 	return (x - 500.0f) / 500.0f;

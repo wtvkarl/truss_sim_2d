@@ -11,22 +11,7 @@
 #include "StateManager.h"
 
 #include "Rectangle.h"
-
-GLfloat vertices[] =
-{
-	-0.80f, 0.75f, 0.0f,
-	-0.76f, 0.75f, 0.0f,
-	-0.80f, 0.70f, 0.0f,
-	-0.76f, 0.70f, 0.0f
-};
-
-// Indices for vertices order
-GLuint indices[] =
-{
-	2,3,1,
-	0,1,2
-};
-
+#include "VertexHandler.h"
 
 int main()
 {
@@ -54,11 +39,17 @@ int main()
 
 	Shader shaderProgram("default.vert", "default.frag");
 
+	VertexHandler vHandler; //empty constructors don't need the "()" part
+	Rectangle rect(100.0f, 100.0f, 20.0f, 20.0f);
+	Rectangle rect2(50, 50, 50, 50);
+	vHandler.addRectangle(rect);
+	vHandler.addRectangle(rect2);
+
 	VAO VAO1;
 	VAO1.Bind();
 
-	VBO VBO1(vertices, sizeof(vertices));
-	EBO EBO1(indices, sizeof(indices));
+	VBO VBO1(vHandler.vertices);
+	EBO EBO1(vHandler.indices);
 
 	VAO1.LinkVBO(VBO1, 0);
 	VAO1.Unbind();
@@ -89,7 +80,6 @@ int main()
 	glfwSetCursorPosCallback(window, cursor_pos_callback);
 	glfwSetKeyCallback(window, key_callback);
 	
-	Rectangle rect(100.0f, 100.0f, 20.0f, 20.0f);
 
 	while (!glfwWindowShouldClose(window)) // main loop
 	{
@@ -98,7 +88,7 @@ int main()
 		shaderProgram.Activate();
 		VAO1.Bind();
 
-		glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, vHandler.indices.size() * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window); // double buffers
 		glfwPollEvents(); //keep this for basic responsiveness
