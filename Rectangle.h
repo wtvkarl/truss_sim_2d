@@ -5,6 +5,8 @@
 #include <vector>
 #include "Point.h"
 
+const GLfloat rectSize = 20;
+
 class Rectangle
 {
 	public:
