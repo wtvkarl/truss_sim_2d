@@ -10,6 +10,22 @@ Point::Point(GLfloat x, GLfloat y)
 	ypos = y;
 	zpos = 0;
 	force = Force(0, 0); //default force is no net force
+
+	//default color is white
+	//rgba floats go from 0.0 to 1.0, not 0 to 255!
+	r_val = 0.35f;
+	g_val = 0.57f;
+	b_val = 0.72f;
+}
+
+Point::Point(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b)
+{
+	xpos = x;
+	ypos = y;
+	zpos = 0;
+	r_val = r;
+	g_val = g;
+	b_val = b;
 }
 
 void Point::printPoint()

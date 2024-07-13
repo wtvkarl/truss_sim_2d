@@ -44,47 +44,50 @@ int main()
 
 	gladLoadGL(); //load glad API
 
-	glViewport(0,0,WIDTH,HEIGHT); // specify bounds of window
+	glViewport(0, 0, WIDTH, HEIGHT); // specify bounds of window
 
 	Shader shaderProgram("default.vert", "default.frag");
-		
+
 	VAO VAO1;
 	VAO1.Bind();
 
-	//we can merge this block of code with the one in the main loop 
-	//put into function (TO-DO)
 	VBO VBO1(vHandler.vertices);
 	EBO EBO1(vHandler.indices);
-	VAO1.LinkVBO(VBO1, 0);
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
+
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	glfwSetMouseButtonCallback(window, mouse_button_callback); 
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetCursorPosCallback(window, cursor_pos_callback);
 	glfwSetKeyCallback(window, key_callback);
-	
+
 
 	while (!glfwWindowShouldClose(window)) // main loop
 	{
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f); 
+		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shaderProgram.Activate();
-		VAO1.Bind();
-		glDrawElements(GL_TRIANGLES, vHandler.indices.size() * sizeof(GLuint), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, vHandler.indices.size(), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window); // double buffers
 		glfwPollEvents(); //keep this for basic responsiveness
 
 		//clean this up and maybe put it in its own function...
-		VBO1 = VBO(vHandler.vertices);
-		EBO1 = EBO(vHandler.indices);
-		VAO1.LinkVBO(VBO1, 0);
-		VAO1.Unbind();
-		VBO1.Unbind();
-		EBO1.Unbind();
-		
+
+		//we can merge this block of code with the one in the main loop 
+		//put into function (TO-DO)
+
+		VAO1.Bind();
+
+		//this code works, DO NOT TOUCH THIS BLOCK.
+		VBO1.updateVertexData(vHandler.vertices);
+		EBO1.updateIndexData(vHandler.indices);
+		VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+		VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	}
 
 	VAO1.Delete();
@@ -92,7 +95,7 @@ int main()
 	EBO1.Delete();
 	shaderProgram.Delete();
 
-	glfwDestroyWindow(window); 
+	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
 }

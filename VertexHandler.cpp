@@ -9,7 +9,7 @@ VertexHandler::VertexHandler()
 	std::ofstream file;
 	file.open(vertexDataFile, std::ofstream::out | std::ofstream::trunc);
 	file.close();
-} 
+}
 
 // ----- public methods ------
 
@@ -18,20 +18,13 @@ void VertexHandler::addRectangle(Rectangle rect)
 	rectangles.push_back(rect);
 	updateIndexVec();
 
-	//#rects * 4 points per rect * 3 coords per point (x,y,z)
-	numElements = rectangles.size() * 4 * 3;
-
 	for (Point p : rect.points)
 	{
-		GLfloat x = p.xpos;
-		GLfloat y = p.ypos;
-		GLfloat z = p.zpos;
-
-		addVertexToVec(x, y, z);
+		addPointToVector(p);
 	}
 
 	writeVertexData(vertexDataFile, rect.points);
-		
+
 }
 
 void VertexHandler::addRectangle(GLfloat x, GLfloat y, GLfloat length, GLfloat height)
@@ -67,11 +60,14 @@ void VertexHandler::printIndexVec()
 
 // ----- private methods -----
 
-void VertexHandler::addVertexToVec(GLfloat x, GLfloat y, GLfloat z)
+void VertexHandler::addPointToVector(Point p)
 {
-	vertices.push_back(x);
-	vertices.push_back(y);
-	vertices.push_back(z);
+	vertices.push_back(p.xpos);
+	vertices.push_back(p.ypos);
+	vertices.push_back(p.zpos);
+	vertices.push_back(p.r_val);
+	vertices.push_back(p.g_val);
+	vertices.push_back(p.b_val);
 }
 
 void VertexHandler::writeVertexData(const char* filename, Point pts[4])
@@ -86,7 +82,11 @@ void VertexHandler::writeVertexData(const char* filename, Point pts[4])
 		{
 			file << pts[i].xpos << ", "
 				<< pts[i].ypos << ", "
-				<< pts[i].zpos << " \n";
+				<< pts[i].zpos << ", ";
+
+			file << pts[i].r_val << ", "
+				<< pts[i].g_val << ", "
+				<< pts[i].b_val << " \n";
 		}
 	}
 
@@ -94,16 +94,16 @@ void VertexHandler::writeVertexData(const char* filename, Point pts[4])
 }
 
 /* everytime a rectangle is added to the vertex vector,
-*  a total of 4 vertices are added, which can be split into 
-*  2 triangles, which require 6 indices. 
-* 
-*  the way rectangles are "built" in this program is 
+*  a total of 4 vertices are added, which can be split into
+*  2 triangles, which require 6 indices.
+*
+*  the way rectangles are "built" in this program is
 *  points are added one by one clockwise starting from the top left.
 *
 *  index pattern follows as such:
 *  0,1,2 (1st triangle)
 *  2,3,1 (2nd triangle)
-* 
+*
 *  we just have to shift the starting index everytime indices is updated.
 */
 
@@ -111,7 +111,7 @@ void VertexHandler::updateIndexVec()
 {
 	//starting index is 0 for the first rectangle
 	int startingIndex = (rectangles.size() - 1) * 4;
-	
+
 	//right triangle
 	indices.push_back(startingIndex);
 	indices.push_back(startingIndex + 1);

@@ -10,28 +10,27 @@
 class VertexHandler
 {
 
-	public:
-		VertexHandler();
+public:
+	VertexHandler();
 
-		std::vector<Rectangle> rectangles;
-		std::vector<GLfloat> vertices;
-		std::vector<GLuint> indices;
+	std::vector<Rectangle> rectangles;
+	std::vector<GLfloat> vertices;
+	std::vector<GLuint> indices;
 
-		const char* vertexDataFile = "util/vertexdata.txt";
-		int numElements = 0;
+	const char* vertexDataFile = "util/vertexdata.txt";
 
-		void addRectangle(Rectangle rect);
-		void addRectangle(GLfloat x, GLfloat y, GLfloat length, GLfloat height);
+	void addRectangle(Rectangle rect);
+	void addRectangle(GLfloat x, GLfloat y, GLfloat length, GLfloat height);
 
-		//this is variable in size and updates every time rectangles are added
-		void printVertVec();
-		void printIndexVec();
-		
+	//this is variable in size and updates every time rectangles are added
+	void printVertVec();
+	void printIndexVec();
 
-	private:
-		void writeVertexData(const char* filename, Point pts[4]);
-		void addVertexToVec(GLfloat x, GLfloat y, GLfloat z);
-		void updateIndexVec();
+
+private:
+	void writeVertexData(const char* filename, Point pts[4]);
+	void addPointToVector(Point p);
+	void updateIndexVec();
 };
 
 #endif

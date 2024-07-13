@@ -8,8 +8,12 @@ class VBO
 {
 	public:
 		GLuint ID;
-		VBO(std::vector<GLfloat>& vertices);
 
+		std::vector <GLfloat> vertexData;
+
+		VBO(std::vector<GLfloat> vertices);
+
+		void updateVertexData(std::vector<GLfloat> newData);
 		void Bind();
 		void Unbind();
 		void Delete();

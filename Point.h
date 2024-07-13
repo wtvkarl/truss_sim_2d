@@ -12,11 +12,13 @@ class Point
 {
 	public:
 		GLfloat xpos, ypos, zpos;
+		GLfloat r_val, g_val, b_val;
 		Force force;
-		
+
 		//this is 2d so zpos is always 0
 		Point();
 		Point(GLfloat x, GLfloat y);
+		Point(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b);
 
 		void printPoint();
 		void addForce(Force f);

@@ -3,11 +3,11 @@
 Rectangle::Rectangle(GLfloat xpos, GLfloat ypos, GLfloat len, GLfloat h)
 {
 	x = xpos;
-	y = ypos;	
+	y = ypos;
 	length = len;
 	height = h;
 	init_norm_coords();
-	
+
 }
 
 Point Rectangle::get_pos()
