@@ -5,21 +5,23 @@
 #include <vector>
 #include "Point.h"
 
+const GLfloat rectSize = 20;
+
 class Rectangle
 {
-	public:
-		std::vector<GLfloat> vertices;
-		Point points[4];
-		GLfloat x, y;
-		GLfloat length, height;
+public:
+	std::vector<GLfloat> vertices;
+	Point points[4];
+	GLfloat x, y;
+	GLfloat length, height;
 
-		Rectangle(GLfloat xpos, GLfloat ypos, GLfloat len, GLfloat h);
+	Rectangle(GLfloat xpos, GLfloat ypos, GLfloat len, GLfloat h);
 
-		Point get_pos();
+	Point get_pos();
 
-	private:
-		void init_norm_coords();
-		
+private:
+	void init_norm_coords();
+
 };
 
 #endif

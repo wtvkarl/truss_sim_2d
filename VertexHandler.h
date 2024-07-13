@@ -4,17 +4,33 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <fstream>
 #include "Point.h"
+#include "Rectangle.h"
 
-void writeToVertexFile(const char* filename, Point p)
+class VertexHandler
 {
-	std::ofstream file(filename);
 
-	file << p.get_norm_coords() << "\n";
+public:
+	VertexHandler();
 
-	file.close();
-}
+	std::vector<Rectangle> rectangles;
+	std::vector<GLfloat> vertices;
+	std::vector<GLuint> indices;
 
+	const char* vertexDataFile = "util/vertexdata.txt";
+
+	void addRectangle(Rectangle rect);
+	void addRectangle(GLfloat x, GLfloat y, GLfloat length, GLfloat height);
+
+	//this is variable in size and updates every time rectangles are added
+	void printVertVec();
+	void printIndexVec();
+
+
+private:
+	void writeVertexData(const char* filename, Point pts[4]);
+	void addPointToVector(Point p);
+	void updateIndexVec();
+};
 
 #endif
