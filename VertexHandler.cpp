@@ -9,6 +9,7 @@ VertexHandler::VertexHandler()
 	std::ofstream file;
 	file.open(vertexDataFile, std::ofstream::out | std::ofstream::trunc);
 	file.close();
+
 }
 
 // ----- public methods ------

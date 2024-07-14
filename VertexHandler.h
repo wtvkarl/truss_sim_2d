@@ -26,6 +26,8 @@ public:
 	void printVertVec();
 	void printIndexVec();
 
+	void drawCursorRect(GLfloat cx, GLfloat cy);
+
 
 private:
 	void writeVertexData(const char* filename, Point pts[4]);
