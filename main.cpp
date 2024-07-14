@@ -29,6 +29,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //version 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //only use core profile
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Truss Simulator", NULL, NULL); //create window statement
 
@@ -64,6 +65,22 @@ int main()
 	glfwSetCursorPosCallback(window, cursor_pos_callback);
 	glfwSetKeyCallback(window, key_callback);
 
+	int width, height, channels;
+	unsigned char* pixels = stbi_load("images/place_cursor.png", &width, &height, &channels, 4);
+
+	if (pixels == NULL)
+	{
+		std::cout << "failed to load image" << "\n";
+		glfwTerminate();
+	}
+
+	GLFWimage image;
+	image.width = width;
+	image.height = height;
+	image.pixels = pixels;
+
+	GLFWcursor* placeCursor = glfwCreateCursor(&image, 0, 0);
+
 
 	while (!glfwWindowShouldClose(window)) // main loop
 	{
@@ -88,6 +105,14 @@ int main()
 		EBO1.updateIndexData(vHandler.indices);
 		VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
 		VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+		if (STATE_MODE == PLACE)
+		{
+			glfwSetCursor(window, placeCursor);
+		}
+		else {
+			glfwSetCursor(window, NULL);
+		}
 	}
 
 	VAO1.Delete();
@@ -108,8 +133,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 	{
 		if (action == GLFW_PRESS && STATE_MODE == PLACE)
 		{
-			//subtracting half the rect size to center on cursor
-			Rectangle r(cursorX - 10, cursorY - 10, rectSize, rectSize);
+			Rectangle r(cursorX, cursorY, rectSize, rectSize);
 			vHandler.addRectangle(r);
 		}
 	}
@@ -117,26 +141,31 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+	if (action == GLFW_PRESS)
 	{
-		STATE_MODE = NORMAL;
-		std::cout << "Selected Mode: NORMAL" << "\n";
-	}
-	else if (key == GLFW_KEY_W && action == GLFW_PRESS)
-	{
-		STATE_MODE = PLACE;
-		std::cout << "Selected Mode: PLACE" << "\n";
-	}
-	else if (key == GLFW_KEY_E && action == GLFW_PRESS)
-	{
-		STATE_MODE = CONNECT;
-		std::cout << "Selected Mode: CONNECT" << "\n";
+		if (key == GLFW_KEY_Q)
+		{
+			STATE_MODE = NORMAL;
+			std::cout << "Selected Mode: NORMAL" << "\n";
+		}
+		else if (key == GLFW_KEY_W)
+		{
+			STATE_MODE = PLACE;
+			std::cout << "Selected Mode: PLACE" << "\n";
+		}
+		else if (key == GLFW_KEY_E)
+		{
+			STATE_MODE = CONNECT;
+			std::cout << "Selected Mode: CONNECT" << "\n";
+		}
+
+		else if (key == GLFW_KEY_SPACE)
+		{
+			printf("[%.2f, %.2f] -> [%.2f, %.2f]\n", cursorX, cursorY, x_norm, y_norm);
+		}
 	}
 
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-	{
-		printf("[%.2f, %.2f] -> [%.2f, %.2f]\n", cursorX, cursorY, x_norm, y_norm);
-	}
+	
 }
 
 static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
