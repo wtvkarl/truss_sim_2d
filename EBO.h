@@ -11,6 +11,7 @@ public:
 
 	std::vector<GLuint> indexData;
 
+	EBO();
 	EBO(std::vector<GLuint>& indices);
 
 	void updateIndexData(std::vector<GLuint> newIndexData);

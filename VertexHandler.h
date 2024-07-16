@@ -13,6 +13,9 @@ class VertexHandler
 public:
 	VertexHandler();
 
+	bool constrainedH = false;
+	bool constrainedV = false;
+
 	std::vector<Rectangle> rectangles;
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
@@ -22,11 +25,13 @@ public:
 	void addRectangle(Rectangle rect);
 	void addRectangle(GLfloat x, GLfloat y, GLfloat length, GLfloat height);
 
+	void checkPositionConstraints(GLFWwindow* window);
+
 	//this is variable in size and updates every time rectangles are added
 	void printVertVec();
 	void printIndexVec();
 
-	void drawCursorRect(GLfloat cx, GLfloat cy);
+	void update(GLfloat cursorX, GLfloat cursorY);
 
 
 private:

@@ -8,13 +8,19 @@
 #include "EBO.h"
 
 #include <stb/stb_image.h>
-#include "StateManager.h"
 
 #include "Rectangle.h"
 #include "VertexHandler.h"
 
 const int WIDTH = 1000;
 const int HEIGHT = 800;
+
+enum Mode { NORMAL, PLACE, CONNECT };
+Mode STATE_MODE = NORMAL;
+
+GLfloat cursorX = 0, cursorY = 0; //cursor pos
+GLfloat hLockCursorX = 0, vLockCursorY = 0; //cursor constrained positions
+GLfloat x_norm = 0, y_norm = 0; //normalized cursor 
 
 static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos);
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
@@ -65,6 +71,7 @@ int main()
 	glfwSetCursorPosCallback(window, cursor_pos_callback);
 	glfwSetKeyCallback(window, key_callback);
 
+	//we could probably put this in a seperate class.. (TODO)
 	int width, height, channels;
 	unsigned char* pixels = stbi_load("images/place_cursor.png", &width, &height, &channels, 4);
 
@@ -81,7 +88,6 @@ int main()
 
 	GLFWcursor* placeCursor = glfwCreateCursor(&image, 0, 0);
 
-
 	while (!glfwWindowShouldClose(window)) // main loop
 	{
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -89,10 +95,7 @@ int main()
 
 		shaderProgram.Activate();
 		glDrawElements(GL_TRIANGLES, vHandler.indices.size(), GL_UNSIGNED_INT, 0);
-
-		glfwSwapBuffers(window); // double buffers
-		glfwPollEvents(); //keep this for basic responsiveness
-
+		
 		//clean this up and maybe put it in its own function...
 
 		//we can merge this block of code with the one in the main loop 
@@ -109,10 +112,16 @@ int main()
 		if (STATE_MODE == PLACE)
 		{
 			glfwSetCursor(window, placeCursor);
+			
 		}
 		else {
 			glfwSetCursor(window, NULL);
 		}
+		
+		vHandler.checkPositionConstraints(window);
+
+		glfwSwapBuffers(window); // double buffers
+		glfwPollEvents(); //keep this for basic responsiveness
 	}
 
 	VAO1.Delete();
@@ -133,8 +142,20 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 	{
 		if (action == GLFW_PRESS && STATE_MODE == PLACE)
 		{
-			Rectangle r(cursorX, cursorY, rectSize, rectSize);
-			vHandler.addRectangle(r);
+			if (vHandler.rectangles.empty())
+			{
+				vHandler.addRectangle(cursorX, cursorY, rectSize, rectSize);
+				hLockCursorX = cursorX;
+				vLockCursorY = cursorY;
+				return;
+			}
+
+			GLfloat r_x, r_y;
+
+			r_x = vHandler.constrainedH ? hLockCursorX : cursorX;
+			r_y = vHandler.constrainedV ? vLockCursorY : cursorY;
+
+			vHandler.addRectangle(r_x, r_y, rectSize, rectSize);
 		}
 	}
 }
@@ -161,7 +182,23 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 		else if (key == GLFW_KEY_SPACE)
 		{
-			printf("[%.2f, %.2f] -> [%.2f, %.2f]\n", cursorX, cursorY, x_norm, y_norm);
+			//printf("[%.2f, %.2f] -> [%.2f, %.2f]\n", cursorX, cursorY, x_norm, y_norm;
+		}
+		
+		else if (key == GLFW_KEY_LEFT_SHIFT)
+		{
+			if (vHandler.rectangles.empty())
+				return;
+
+			hLockCursorX = vHandler.rectangles.back().xPos;
+		}
+
+		else if (key == GLFW_KEY_LEFT_CONTROL)
+		{
+			if (vHandler.rectangles.empty())
+				return;
+
+			vLockCursorY = vHandler.rectangles.back().yPos;
 		}
 	}
 

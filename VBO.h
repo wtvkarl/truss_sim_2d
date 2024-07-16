@@ -11,6 +11,7 @@ class VBO
 
 		std::vector <GLfloat> vertexData;
 
+		VBO();
 		VBO(std::vector<GLfloat> vertices);
 
 		void updateVertexData(std::vector<GLfloat> newData);
