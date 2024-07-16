@@ -12,9 +12,10 @@ class Rectangle
 public:
 	std::vector<GLfloat> vertices;
 	Point points[4];
-	GLfloat x, y;
+	GLfloat xPos, yPos;
 	GLfloat length, height;
 
+	Rectangle();
 	Rectangle(GLfloat xpos, GLfloat ypos, GLfloat len, GLfloat h);
 
 	Point get_pos();

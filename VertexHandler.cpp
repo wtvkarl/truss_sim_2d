@@ -34,6 +34,17 @@ void VertexHandler::addRectangle(GLfloat x, GLfloat y, GLfloat length, GLfloat h
 	addRectangle(r);
 }
 
+void VertexHandler::checkPositionConstraints(GLFWwindow* window)
+{
+	//left ctrl for horizontal lock
+	//left shift for vertical lock 
+
+	//ITS FLIPPED BUT IT WORKS. DONT TOUCH IT.
+
+	constrainedH = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
+	constrainedV = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
+}
+
 void VertexHandler::printVertVec()
 {
 	for (GLfloat f : vertices)

@@ -1,5 +1,10 @@
 #include "EBO.h"
 
+EBO::EBO()
+{
+
+}
+
 EBO::EBO(std::vector<GLuint>& indices)
 {
 	indexData = indices;

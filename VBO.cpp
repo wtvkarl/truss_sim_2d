@@ -1,5 +1,10 @@
 #include "VBO.h"
 
+VBO::VBO()
+{
+
+}
+
 VBO::VBO(std::vector<GLfloat> vertices)
 {
 	vertexData = vertices;

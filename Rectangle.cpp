@@ -1,9 +1,14 @@
 #include "Rectangle.h"
 
+Rectangle::Rectangle()
+{
+
+}
+
 Rectangle::Rectangle(GLfloat xpos, GLfloat ypos, GLfloat len, GLfloat h)
 {
-	x = xpos;
-	y = ypos;
+	xPos = xpos;
+	yPos = ypos;
 	length = len;
 	height = h;
 	init_norm_coords();
@@ -12,16 +17,16 @@ Rectangle::Rectangle(GLfloat xpos, GLfloat ypos, GLfloat len, GLfloat h)
 
 Point Rectangle::get_pos()
 {
-	return Point(x, y);
+	return Point(xPos, yPos);
 }
 
 //normalizing functions found in Point.h 
 void Rectangle::init_norm_coords()
 {
-	Point topLeft(norm_x(x), norm_y(y));
-	Point topRight(norm_x(x + length), norm_y(y));
-	Point bottomLeft(norm_x(x), norm_y(y + height));
-	Point bottomRight(norm_x(x + length), norm_y(y + height));
+	Point topLeft(norm_x(xPos), norm_y(yPos));
+	Point topRight(norm_x(xPos + length), norm_y(yPos));
+	Point bottomLeft(norm_x(xPos), norm_y(yPos + height));
+	Point bottomRight(norm_x(xPos + length), norm_y(yPos + height));
 
 	//go in clockwise order starting from topLeft (remember this for indexing)
 	//don't forget the arrows when assigning a value to a specific object's array
